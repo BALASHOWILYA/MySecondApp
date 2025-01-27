@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MySecondApp</string>
+    <string name="type_password">type password</string>
+    <string name="type_name">type name</string>
+    <string name="name">Name:</string>
+    <string name="password">Password:</string>
+    <string name="avatar">Avatar</string>
+    <string name="sign_in">sign in</string>
+</resources>
