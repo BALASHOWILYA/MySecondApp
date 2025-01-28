@@ -6,4 +6,5 @@
     <string name="password">Password:</string>
     <string name="avatar">Avatar</string>
     <string name="sign_in">sign in</string>
+    <string name="names">names:</string>
 </resources>

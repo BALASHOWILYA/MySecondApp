@@ -3,21 +3,23 @@ package com.example.mysecondapp.presentation
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.mysecondapp.R
+import com.example.mysecondapp.data.repositories.UserRepositoryImpl
 import com.example.mysecondapp.databinding.ActivityMainBinding
+import com.example.mysecondapp.domain.usecases.GetUsersUseCase
+import com.example.mysecondapp.presentation.viewmodels.GetUsersViewModel
+import com.example.mysecondapp.presentation.viewmodels.UserViewModelFactory
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var name: EditText
-    private lateinit var password: EditText
     private lateinit var binding: ActivityMainBinding
-    private lateinit var button: Button
+    private lateinit var viewModel: GetUsersViewModel
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,14 +32,27 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        val userRepository = UserRepositoryImpl()
+        val getUsersUseCase = GetUsersUseCase(userRepository)
+        val viewModelFactory = UserViewModelFactory(getUsersUseCase = getUsersUseCase)
 
-        name = findViewById(R.id.edit_name_id)
-        password = findViewById(R.id.edit_password_id)
-        button = findViewById(R.id.button_id)
+
+
+        viewModel = ViewModelProvider(this, viewModelFactory)[GetUsersViewModel::class.java]
+
+
 
         binding.buttonId.setOnClickListener{
-            Toast.makeText(this, "Button is pressed", Toast.LENGTH_LONG).show()
+            lifecycleScope.launch {
+                viewModel.user.collect{ list ->
+                    binding.nameListId.text = list.joinToString(separator = "\n") { it.name }
+                }
+            }
         }
+
+
+
+
 
         Log.d("mlog", "onCreate")
 
