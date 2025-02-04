@@ -1,4 +1,4 @@
-package com.example.mysecondapp.presentation
+package com.example.mysecondapp.presentation.activities
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

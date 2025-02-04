@@ -8,6 +8,6 @@ import com.example.mysecondapp.domain.usecases.GetUsersUseCase
 class UserViewModelFactory(private val getUsersUseCase: GetUsersUseCase): ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return UserViewModelFactory(getUsersUseCase) as T
+        return GetUsersViewModel(getUsersUseCase) as T
     }
 }
