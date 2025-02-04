@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+   // id("androidx.room:room-compiler:2.5.0") // Добавляем kapt
 }
 
 android {
@@ -13,7 +14,6 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -26,20 +26,29 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     viewBinding {
         enable = true
     }
+
+   // kapt {
+   //     useBuildCache = false
+   // }
 }
 
 dependencies {
-
+    implementation(libs.androidx.room.runtime) // Библиотека "Room"
+    //kapt(libs.androidx.room.compiler) // Кодогенератор для Room
+    implementation(libs.androidx.room.ktx) // Дополнительно для Kotlin Coroutines, Kotlin Flows
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

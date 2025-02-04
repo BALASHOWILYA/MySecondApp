@@ -3,12 +3,16 @@ package com.example.mysecondapp.presentation.activities
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.mysecondapp.R
 import com.example.mysecondapp.data.repositories.UserRepositoryImpl
 import com.example.mysecondapp.databinding.ActivityMainBinding
 import com.example.mysecondapp.domain.models.User
 import com.example.mysecondapp.domain.usecases.GetUsersUseCase
+import com.example.mysecondapp.presentation.fragments.UserProfile
 import com.example.mysecondapp.presentation.viewmodels.GetUsersViewModel
 import com.example.mysecondapp.presentation.viewmodels.UserViewModelFactory
 
@@ -16,6 +20,7 @@ import com.example.mysecondapp.presentation.viewmodels.UserViewModelFactory
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var userViewModel: GetUsersViewModel
+
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +31,12 @@ class MainActivity : AppCompatActivity() {
         val userRepository = UserRepositoryImpl()
         val getUsersUseCase = GetUsersUseCase(userRepository)
         val viewModelFactory = UserViewModelFactory(getUsersUseCase = getUsersUseCase)
+
+        val userProfile: UserProfile = UserProfile()
+
+        if(savedInstanceState == null){
+            addFragment(userProfile, R.id.fragment_container)
+        }
 
         userViewModel = ViewModelProvider(this, viewModelFactory)[GetUsersViewModel::class.java]
 
@@ -39,6 +50,38 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+
+
+
+    private fun addFragment(fragment: Fragment, containerId: Int) {
+        if (supportFragmentManager.findFragmentById(containerId) == null) {
+            supportFragmentManager
+                .beginTransaction()
+                .add(containerId, fragment)
+                .commitAllowingStateLoss()
+        }
+    }
+    private fun replaceFragment(fragment: Fragment, containerId: Int) {
+        if (supportFragmentManager.findFragmentById(containerId) == null) {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(containerId, fragment)
+                .commitAllowingStateLoss()
+        }
+    }
+
+    private fun deleteFragment(fragment: Fragment, containerId: Int) {
+        if (supportFragmentManager.findFragmentById(containerId) == null) {
+            supportFragmentManager
+                .beginTransaction()
+                .remove(fragment)
+                .commitAllowingStateLoss()
+        }
+    }
+
+
+
+
 
     private fun displayUsers(users: List<User>) {
         val sb = StringBuilder()
