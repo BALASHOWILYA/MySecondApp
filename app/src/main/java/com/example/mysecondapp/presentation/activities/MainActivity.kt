@@ -11,8 +11,11 @@ import com.example.mysecondapp.R
 import com.example.mysecondapp.data.repositories.UserRepositoryImpl
 import com.example.mysecondapp.databinding.ActivityMainBinding
 import com.example.mysecondapp.domain.models.User
+import com.example.mysecondapp.domain.usecases.AddUserUseCase
 import com.example.mysecondapp.domain.usecases.GetUsersUseCase
 import com.example.mysecondapp.presentation.fragments.UserProfile
+import com.example.mysecondapp.presentation.viewmodels.AddUserViewModel
+import com.example.mysecondapp.presentation.viewmodels.AddUserViewModelFactory
 import com.example.mysecondapp.presentation.viewmodels.GetUsersViewModel
 import com.example.mysecondapp.presentation.viewmodels.UserViewModelFactory
 
@@ -20,6 +23,7 @@ import com.example.mysecondapp.presentation.viewmodels.UserViewModelFactory
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var userViewModel: GetUsersViewModel
+    private lateinit var addUserViewModel: AddUserViewModel
 
 
     @SuppressLint("MissingInflatedId")
@@ -30,7 +34,9 @@ class MainActivity : AppCompatActivity() {
 
         val userRepository = UserRepositoryImpl()
         val getUsersUseCase = GetUsersUseCase(userRepository)
+        val addUserUseCase = AddUserUseCase(userRepository)
         val viewModelFactory = UserViewModelFactory(getUsersUseCase = getUsersUseCase)
+        val addviewModelFactory = AddUserViewModelFactory(addUserUseCase = addUserUseCase)
 
         val userProfile: UserProfile = UserProfile()
 
@@ -39,6 +45,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         userViewModel = ViewModelProvider(this, viewModelFactory)[GetUsersViewModel::class.java]
+        addUserViewModel = ViewModelProvider(this, viewModelFactory)[AddUserViewModel::class.java]
+
+
 
         binding.buttonId.setOnClickListener {
             lifecycleScope.launchWhenResumed {
