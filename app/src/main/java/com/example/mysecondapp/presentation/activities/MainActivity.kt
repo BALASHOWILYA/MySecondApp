@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.mysecondapp.R
@@ -38,14 +37,15 @@ class MainActivity : AppCompatActivity() {
         val viewModelFactory = UserViewModelFactory(getUsersUseCase = getUsersUseCase)
         val addviewModelFactory = AddUserViewModelFactory(addUserUseCase = addUserUseCase)
 
-        val userProfile: UserProfile = UserProfile()
-
+        val userProfile = UserProfile()
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if(savedInstanceState == null){
-            addFragment(userProfile, R.id.fragment_container)
+
+            addFragment(userProfile, fragment)
         }
 
         userViewModel = ViewModelProvider(this, viewModelFactory)[GetUsersViewModel::class.java]
-        addUserViewModel = ViewModelProvider(this, viewModelFactory)[AddUserViewModel::class.java]
+        addUserViewModel = ViewModelProvider(this, addviewModelFactory)[AddUserViewModel::class.java]
 
 
 
@@ -62,16 +62,16 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    private fun addFragment(fragment: Fragment, containerId: Int) {
-        if (supportFragmentManager.findFragmentById(containerId) == null) {
+    private fun addFragment(fragment: Fragment, containerId: Fragment?) {
+        if (containerId != null) {
             supportFragmentManager
                 .beginTransaction()
-                .add(containerId, fragment)
+                .add(R.id.fragment_container, fragment)
                 .commitAllowingStateLoss()
         }
     }
     private fun replaceFragment(fragment: Fragment, containerId: Int) {
-        if (supportFragmentManager.findFragmentById(containerId) == null) {
+        if (supportFragmentManager.findFragmentById(containerId) != null) {
             supportFragmentManager
                 .beginTransaction()
                 .replace(containerId, fragment)
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun deleteFragment(fragment: Fragment, containerId: Int) {
-        if (supportFragmentManager.findFragmentById(containerId) == null) {
+        if (supportFragmentManager.findFragmentById(containerId) != null) {
             supportFragmentManager
                 .beginTransaction()
                 .remove(fragment)
